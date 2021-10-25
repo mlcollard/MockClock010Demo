@@ -63,12 +63,31 @@ private:
     std::time_t stop_time;
 };
 
+class TwoSecondClock : public Clock {
+public:
+    virtual std::time_t start() const {
+        return 0;
+    }
+
+    virtual std::time_t now() const {
+        return 2;
+    }
+};
+
 int main() {
 
     // 2-second session
     {
         Session s;
         sleep(2);
+        s.stop();
+        assert(SessionReport::displayTime(s.seconds()) == "00:00:02");
+    }
+
+    // 2-second clock session
+    {
+        TwoSecondClock clock;
+        Session s(clock);
         s.stop();
         assert(SessionReport::displayTime(s.seconds()) == "00:00:02");
     }
